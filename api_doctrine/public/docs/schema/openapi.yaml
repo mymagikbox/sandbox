@@ -1,0 +1,392 @@
+openapi: 3.0.0
+info:
+  title: 'API documentation'
+  description: "\nPre-conditions\n==============\n- All request are protected, authorization in header `Bearer`\n- All requests with json data in body MUST have `Content-Type: application/json` header specified\n- All dates passed to/from server should be in UTC time zone\n- All dates should be formatted as YYYY-MM-DD Example: `2017-01-26`\n        "
+  version: '0.1'
+servers:
+  -
+    url: /
+    description: 'base path'
+paths:
+  /admin/user/create:
+    post:
+      tags:
+        - user
+      description: 'Create user from admin panel'
+      operationId: 7bf13206772683a666fcdf9cddef594e
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserCreateCommand'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                required:
+                  - success
+                  - data
+                properties:
+                  success: { type: boolean }
+                type: object
+        Error:
+          $ref: '#/components/responses/Error'
+      security:
+        -
+          bearerAuth: []
+  '/admin/user/{id}/delete':
+    delete:
+      tags:
+        - user
+      description: 'Delete user from admin panel'
+      operationId: 715f23920ba127dc1330ee34c0e733ba
+      parameters:
+        -
+          $ref: '#/components/parameters/IdInPath'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                required:
+                  - success
+                  - data
+                properties:
+                  success: { type: boolean }
+                type: object
+        Error:
+          $ref: '#/components/responses/Error'
+      security:
+        -
+          bearerAuth: []
+  /admin/auth/login:
+    post:
+      tags:
+        - auth
+      description: 'Login user on admin panel'
+      operationId: 292e08b0ea29ad7ab30f0d8cd4fbfcbd
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminAuthLoginUserCommand'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                required:
+                  - success
+                  - data
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/AdminAuthLoginRespond' }
+                type: object
+        Error:
+          $ref: '#/components/responses/Error'
+      security: []
+  /admin/auth/logout:
+    post:
+      tags:
+        - auth
+      description: 'Logout user on admin panel'
+      operationId: a850b72d7b787385bf6efdde283f8fb2
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                required:
+                  - success
+                  - data
+                properties:
+                  success: { type: boolean }
+                type: object
+        Error:
+          $ref: '#/components/responses/Error'
+      security:
+        -
+          bearerAuth: []
+  '/admin/user/{id}/update':
+    patch:
+      tags:
+        - user
+      description: 'Update user from admin panel'
+      operationId: 0c677d4e4e78dd250261b6655b4adf4d
+      parameters:
+        -
+          $ref: '#/components/parameters/IdInPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserUpdateCommand'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                required:
+                  - success
+                  - data
+                properties:
+                  success: { type: boolean }
+                type: object
+        Error:
+          $ref: '#/components/responses/Error'
+      security:
+        -
+          bearerAuth: []
+  '/admin/user/{id}/view':
+    get:
+      tags:
+        - user
+      description: 'view user info'
+      operationId: bafc162a98b243a053f45531848987ad
+      parameters:
+        -
+          $ref: '#/components/parameters/IdInPath'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                required:
+                  - success
+                  - data
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/AdminUserViewRespond' }
+                type: object
+        Error:
+          $ref: '#/components/responses/Error'
+      security:
+        -
+          bearerAuth: []
+components:
+  schemas:
+    Pagination:
+      required:
+        - total
+        - page
+        - limit
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+      type: object
+    Sorter:
+      required:
+        - sort_by
+        - sort_order
+      properties:
+        sort_by:
+          type: string
+        sort_order:
+          type: string
+          enum:
+            - asc
+            - desc
+      type: object
+    AdminUserCreateCommand:
+      required:
+        - username
+        - email
+        - role
+        - status
+      properties:
+        username:
+          type: string
+          maximum: 255
+          minimum: 3
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          maximum: 255
+          minimum: 6
+        role:
+          type: string
+          enum:
+            - admin
+            - manager
+          example: admin
+        status:
+          type: string
+          enum:
+            - disabled
+            - active
+            - deleted
+          example: active
+      type: object
+    AdminAuthLoginUserCommand:
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          maximum: 255
+          minimum: 6
+        password:
+          type: string
+          maximum: 255
+          minimum: 6
+        device_info:
+          type: string
+          maximum: 255
+          nullable: true
+      type: object
+    AdminAuthLoginRespond:
+      required:
+        - access_token
+        - refresh_token
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+      type: object
+    AdminUserUpdateCommand:
+      required:
+        - username
+        - email
+        - role
+        - status
+      properties:
+        username:
+          type: string
+          maximum: 255
+          minimum: 3
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum:
+            - admin
+            - manager
+          example: admin
+        status:
+          type: string
+          enum:
+            - disabled
+            - active
+            - deleted
+          example: active
+      type: object
+    AdminUserViewRespond:
+      required:
+        - id
+        - username
+        - email
+        - role
+        - status
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+            - admin
+            - manager
+          example: admin
+        status:
+          type: string
+          enum:
+            - disabled
+            - active
+            - deleted
+          example: active
+      type: object
+  responses:
+    Error:
+      description: "\n                Errors:\n                400 - Bad Request;\n                401 - Wrong token provided;\n                403 - Access denied;\n                404 - Not found;\n                409 - Other error;\n                500 - Runtime error;\n            "
+      content:
+        application/json:
+          schema:
+            required:
+              - success
+              - error
+            properties:
+              success:
+                type: boolean
+              error:
+                required:
+                  - type
+                  - description
+                properties:
+                  type: { type: string, enum: [validation, exception], example: validation }
+                  description: { type: string }
+                  details: { type: object, example: 'field_name: description' }
+                type: object
+            type: object
+  parameters:
+    IdInPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        example: 1
+      example: 1
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+      example: 10
+    page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+      example: 1
+    sortOrder:
+      name: sort_order
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+      example: desc
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  -
+    bearerAuth: []
+tags:
+  -
+    name: user
+    description: user
+  -
+    name: auth
+    description: auth

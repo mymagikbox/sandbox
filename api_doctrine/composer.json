@@ -1,0 +1,56 @@
+{
+    "name": "react/api",
+    "description": "Test core React and Api",
+    "require": {
+        "php": ">=8.2",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "slim/slim": "^4.14",
+        "slim/psr7": "^1.7",
+        "zircote/swagger-php": "^4.10",
+        "swagger-api/swagger-ui": "^5.17",
+        "vlucas/phpdotenv": "^5.6",
+        "php-di/php-di": "^7.0",
+        "laminas/laminas-config-aggregator": "^1.15",
+        "symfony/cache": "^7.1",
+        "symfony/console": "^7.1",
+        "monolog/monolog": "^3.7",
+        "eventsauce/object-hydrator": "^1.4",
+        "symfony/validator": "^7.1",
+        "symfony/translation": "^7.1",
+        "symfony/config": "^7.1",
+        "webmozart/assert": "^1.11",
+        "firebase/php-jwt": "^6.10",
+        "doctrine/orm": "^3",
+        "doctrine/dbal": "^4",
+        "symfony/event-dispatcher": "^7.1",
+        "doctrine/migrations": "^3.8",
+        "symfony/uid": "^7.1"
+    },
+    "require-dev": {
+        "codeception/codeception": "^5.1",
+        "codeception/module-rest": "*",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-asserts": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpLab\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "start": "php -S localhost:8080 -t public",
+        "test": "phpunit"
+    },
+    "authors": [
+        {
+            "name": "Head Hunter",
+            "email": "mymagikbox@gmail.com"
+        }
+    ]
+}

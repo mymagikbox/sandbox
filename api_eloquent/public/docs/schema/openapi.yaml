@@ -1,0 +1,208 @@
+openapi: 3.0.0
+info:
+  title: 'API for adverts'
+  description: "\r\nPre-conditions\r\n==============\r\n- All request are protected, authorization in header `Bearer`\r\n- All request mast be send on `/v1/advert`\r\n- All requests with json data in body MUST have `Content-Type: application/json` header specified\r\n- All dates passed to/from server should be in UTC time zone\r\n- All dates should be formatted as YYYY-MM-DD Example: `2017-01-26`\r\n        "
+  version: '0.1'
+servers:
+  -
+    url: /
+    description: 'base path'
+paths:
+  /v1/advert/customers:
+    get:
+      tags:
+        - Customers
+      description: "get Customer list\r\n\r\n        Description for 'status_id' in responce\r\n\r\n        'status_id' = 0 - in processing\r\n\r\n        'status_id' = 1 - success pay\r\n\r\n        'status_id' = 2 - fail pay\r\n\r\n        "
+      operationId: 8e01b03b1805f7ba8763b6f47d0b161a
+      parameters:
+        -
+          $ref: '#/components/parameters/page'
+        -
+          $ref: '#/components/parameters/limit'
+        -
+          $ref: '#/components/parameters/from_date'
+        -
+          $ref: '#/components/parameters/to_date'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                required:
+                  - success
+                  - data
+                properties:
+                  success: { type: boolean }
+                  data: { properties: { pagination: { $ref: '#/components/schemas/Pagination' }, result: { type: array, items: { $ref: '#/components/schemas/CustomerItem' } } }, type: object }
+                type: object
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+        -
+          bearerAuth: []
+  /v1/advert/form-request:
+    get:
+      tags:
+        - FormRequest
+      description: 'get Form Request list'
+      operationId: 36b39d79d73ddeff9218abc995cb823d
+      parameters:
+        -
+          $ref: '#/components/parameters/page'
+        -
+          $ref: '#/components/parameters/limit'
+        -
+          $ref: '#/components/parameters/from_date'
+        -
+          $ref: '#/components/parameters/to_date'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                required:
+                  - success
+                  - data
+                properties:
+                  success: { type: boolean }
+                  data: { properties: { pagination: { $ref: '#/components/schemas/Pagination' }, result: { type: array, items: { $ref: '#/components/schemas/FormRequestItem' } } }, type: object }
+                type: object
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+        -
+          bearerAuth: []
+components:
+  schemas:
+    Pagination:
+      required:
+        - total
+        - page
+        - limit
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+      type: object
+    CustomerItem:
+      required:
+        - id
+        - name
+        - product
+        - bundle
+        - phone
+        - email
+        - status
+        - status_id
+        - created_at
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        product:
+          type: string
+        bundle:
+          type: string
+        phone:
+          type: string
+          example: '+7 (000) 000-00-00'
+        email:
+          type: string
+          format: email
+        status:
+          type: string
+        status_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+      type: object
+    FormRequestItem:
+      required:
+        - id
+        - name
+        - phone
+        - email
+        - created_at
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+          example: '+7 (000) 000-00-00'
+        email:
+          type: string
+          format: email
+        created_at:
+          type: string
+          format: date-time
+      type: object
+  responses:
+    Error:
+      description: "\r\n                Errors:\r\n                400 - Bad Request;\r\n                401 - Wrong token provided;\r\n                403 - Access denied;\r\n                404 - Not found;\r\n                409 - Other error;\r\n                500 - Runtime error;\r\n            "
+      content:
+        application/json:
+          schema:
+            required:
+              - success
+              - error
+            properties:
+              success:
+                type: boolean
+              error:
+                required:
+                  - code
+                  - message
+                properties:
+                  code: { type: integer }
+                  message: { type: string }
+                type: object
+            type: object
+  parameters:
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+      example: 10
+    page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+      example: 1
+    from_date:
+      name: from_date
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2024-01-25'
+    to_date:
+      name: to_date
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+      example: '2024-05-03'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  -
+    bearerAuth: []

@@ -1,0 +1,9 @@
+<?php
+declare(strict_types=1);
+
+namespace PhpLab\Modules\User\Domain;
+
+class JwtRefreshTokenPayload extends JwtAccessTokenPayload
+{
+    const DEFAULT_TOKEN_LIFETIME = '+30 days'; // +10 hour
+}

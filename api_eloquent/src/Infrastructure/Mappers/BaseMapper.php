@@ -1,0 +1,16 @@
+<?php
+declare(strict_types=1);
+
+namespace PhpLab\Infrastructure\Mappers;
+use Illuminate\Database\Eloquent\Model;
+
+class BaseMapper
+{
+    public static function modelToDomain($model)
+    {
+
+    }
+    public static function domainToModel($domain) {
+
+    }
+}

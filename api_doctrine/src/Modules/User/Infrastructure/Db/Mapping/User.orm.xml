@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity
+            name="PhpLab\Modules\User\Domain\Model\User"
+            table="user"
+    >
+        <indexes>
+            <index name="username_idx" columns="username"/>
+            <index name="email_idx" columns="email"/>
+        </indexes>
+
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="username" column="username" length="255" />
+        <field name="email" column="email" length="255" unique="true"/>
+        <field
+                name="status"
+                column="status"
+                length="255"
+                enum-type="PhpLab\Modules\User\Domain\Enum\UserStatus"
+        />
+        <field
+                name="role"
+                column="role"
+                length="255"
+                enum-type="PhpLab\Modules\User\Domain\Enum\UserRole"
+        />
+
+        <embedded
+                name="password"
+                class="PhpLab\Modules\User\Domain\Model\Entity\Password"
+        />
+
+        <field name="createdAt" column="created_at" type="datetime_immutable" />
+        <field name="updatedAt" column="updated_at" type="datetime_immutable" nullable="true" />
+        <field name="deletedAt" column="deleted_at" type="datetime_immutable" nullable="true" />
+
+    </entity>
+</doctrine-mapping>
